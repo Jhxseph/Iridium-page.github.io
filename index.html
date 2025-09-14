@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta name="description" content="IRIDIUM Research Group - Pesquisa Aplicada a Processos Industriais (UFCG)" />
+<title>IRIDIUM - Research Group</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --bg:#ffffff;
+    --muted:#f7f8fa;
+    --text:#333;
+    --accent:#0070c0;
+    --card-shadow: 0 6px 18px rgba(16,24,40,0.06);
+    --max-width:1100px;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:'Roboto',sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+  .container{max-width:var(--max-width);margin:0 auto;padding:0 1.25rem}
+  header.navbar{
+    background: rgba(255,255,255,0.95); backdrop-filter: blur(8px);
+    position: sticky; top:0;
+    border-bottom:1px solid #e6eef3;
+    z-index:1000;
+  }
+  .navbar-inner{display:flex;align-items:center;justify-content:space-between;padding:1rem 0}
+  .logo{font-weight:700;color:var(--accent);font-size:1.15rem;text-decoration:none}
+  nav ul{list-style:none;display:flex;gap:1rem;margin:0;padding:0;align-items:center}
+  nav a{color:var(--text);text-decoration:none;font-weight:500}
+  nav a:hover{color:var(--accent);text-decoration:underline}
+  section{padding:3.5rem 0}
+  h2 {font-size: 2rem; text-align: center; margin-bottom: 2.5rem;}
+  .card{background:#fff;border-radius:8px;padding:1.5rem;box-shadow:var(--card-shadow)}
+  .card h3 { margin-top: 0; }
+  
+  /* Language Switcher */
+  .lang-switcher button { background: none; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; padding: 0.3rem 0.5rem; margin-left: 0.5rem;}
+  .lang-switcher button.active { background-color: var(--accent); color: white; border-color: var(--accent); }
+
+  /* Team Section */
+  .team-section, #partners {background:var(--muted)}
+  .tabs{display:flex;gap:.5rem;flex-wrap:wrap;justify-content:center;margin-bottom:1.5rem}
+  .tab-btn{
+    background:none;border:1px solid #ddd;padding:.5rem .9rem;border-radius:8px;cursor:pointer;font-weight:600;
+  }
+  .tab-btn:hover{background:#eaf6ff;border-color:#d0eaf9}
+  .tab-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+  .team-scroll{display:flex;gap:1rem;overflow-x:auto;padding:1rem 0 1.5rem;scroll-snap-type:x mandatory;}
+  .team-member-card{
+    scroll-snap-align:start; min-width:260px; border-radius:10px;background:#fff;box-shadow:var(--card-shadow);
+    display:block;border:none;padding:0;text-align:left;cursor:pointer;
+    overflow:hidden;flex-shrink:0; transition: transform .18s ease;
+  }
+  .team-member-card:hover{transform:translateY(-6px);}
+  .team-member-card img{display:block;width:100%;height:220px;object-fit:cover}
+  .team-info{padding:1rem}
+  
+  /* Publications */
+  #publications ul { list-style: none; padding: 0; max-width: 800px; margin: 0 auto; text-align: left;}
+  #publications li { background: var(--bg); border: 1px solid #eee; padding: 1.25rem; border-radius: 8px; margin-bottom: 1rem; position:relative;}
+  #publications li a { font-weight: bold; color: var(--accent); }
+  .bib-btn { position: absolute; top: 1rem; right: 1rem; font-size: 0.8rem; padding: 0.3rem 0.6rem; background: #eee; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; }
+  .bib-btn:hover { background: #ddd; }
+  .bibtex-data { display: none; }
+
+  /* Partners Section */
+  .partners-grid { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 2.5rem; }
+  .partners-grid img { max-width: 150px; height: auto; filter: grayscale(100%); transition: filter 0.3s; }
+  .partners-grid img:hover { filter: grayscale(0%); }
+
+  /* Contact Section */
+  .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: center; text-align: left;}
+  .map-container { overflow:hidden; border-radius:8px; width:100%; height: 350px; box-shadow: var(--card-shadow); }
+  .map-container iframe { border:0; height:100%; width:100%;}
+  @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; }}
+
+  /* Animations on Scroll */
+  .animate-on-scroll { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease-out, transform 0.6s ease-out; }
+  .animate-on-scroll.visible { opacity: 1; transform: translateY(0); }
+
+  /* Modal */
+  .modal{display:none;position:fixed;inset:0;background:rgba(3,6,23,0.55);align-items:center;justify-content:center;padding:1.25rem;z-index:2000}
+  .modal.open{display:flex}
+  .modal-dialog{background:#fff;border-radius:10px;max-width:560px;width:100%;padding:1.5rem;position:relative;box-shadow:0 20px 60px rgba(2,6,23,.25)}
+  .modal-close{position:absolute;top:.6rem;right:.6rem;border:none;background:transparent;font-size:1.25rem;cursor:pointer}
+  .modal-body{display:flex;gap:1.25rem;align-items:flex-start}
+  .modal-img{width:96px;height:96px;border-radius:50%;object-fit:cover;flex-shrink:0}
+  #modalLinks { margin-top: 0.75rem; }
+  #modalLinks a { margin-right: 1rem; text-decoration: none; font-weight: bold; color: var(--accent); }
+</style>
+</head>
+<body>
+
+<header class="navbar" role="banner">
+  <div class="container navbar-inner">
+    <a class="logo" href="#home">IRIDIUM</a>
+    <nav aria-label="Navegação principal">
+      <ul>
+        <li><a href="#home" data-lang-key="navHome">Home</a></li>
+        <li><a href="#research" data-lang-key="navResearch">Pesquisa</a></li>
+        <li><a href="#team" data-lang-key="navTeam">Equipe</a></li>
+        <li><a href="#publications" data-lang-key="navPublications">Publicações</a></li>
+        <li><a href="#partners" data-lang-key="navPartners">Parceiros</a></li>
+        <li><a href="#contact" data-lang-key="navContact">Contato</a></li>
+        <li class="lang-switcher">
+          <button id="lang-pt">🇧🇷</button>
+          <button id="lang-en">🇺🇸</button>
+        </li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section id="home" class="section animate-on-scroll">
+    <div class="container">
+      <h1 data-lang-key="homeTitle">IRIDIUM Research Group</h1>
+      <p data-lang-key="homeSubtitle">Pesquisa Aplicada a Processos Industriais no Centro de Ciências e Tecnologia da UFCG. Nossa missão é apoiar a transformação digital (Indústria 4.0) em indústrias químicas e petroquímicas.</p>
+    </div>
+  </section>
+
+  <section id="research" class="section">
+    <div class="container">
+      <h2 class="animate-on-scroll" data-lang-key="researchTitle">Linhas de Pesquisa</h2>
+      <div class="grid grid-4">
+        <div class="card animate-on-scroll"><h3 data-lang-key="researchArea1Title">Modelagem e Simulação</h3><p data-lang-key="researchArea1Desc">Desenvolvimento de modelos matemáticos para prever e analisar o comportamento de processos químicos.</p></div>
+        <div class="card animate-on-scroll"><h3 data-lang-key="researchArea2Title">Controle de Processos</h3><p data-lang-key="researchArea2Desc">Implementação de estratégias de controle avançado e sintonia de malhas para otimizar a operação industrial.</p></div>
+        <div class="card animate-on-scroll"><h3 data-lang-key="researchArea3Title">Otimização de Processos</h3><p data-lang-key="researchArea3Desc">Aplicação de algoritmos para maximizar a eficiência, o lucro e a sustentabilidade de plantas industriais.</p></div>
+        <div class="card animate-on-scroll"><h3 data-lang-key="researchArea4Title">Análise Econômica</h3><p data-lang-key="researchArea4Desc">Estudos de viabilidade técnica e econômica para projetos e otimizações na indústria de processos.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="team" class="section team-section">
+    <div class="container">
+      <h2 class="animate-on-scroll" data-lang-key="teamTitle">Nossa Equipe</h2>
+      <div class="tabs animate-on-scroll" id="team-tabs">
+        <button class="tab-btn active" data-filter="All" data-lang-key="filterAll">Todos</button>
+        <button class="tab-btn" data-filter="Full Professor" data-lang-key="filterProfessor">Professor</button>
+        <button class="tab-btn" data-filter="PhD Candidate" data-lang-key="filterPhD">Doutorando(a)</button>
+        <button class="tab-btn" data-filter="Master's Student" data-lang-key="filterMaster">Mestrando(a)</button>
+        <button class="tab-btn" data-filter="Alumni" data-lang-key="filterAlumni">Alumni</button>
+      </div>
+      <div class="team-scroll animate-on-scroll" id="teamScroll">
+        <button type="button" class="team-member-card" data-role="Full Professor" data-img="heleno.jpg" data-bio-key="bioHeleno" data-lattes="http://lattes.cnpq.br/SEU-LATTES-AQUI" data-scholar="https://scholar.google.com/SUA-PAGINA">
+          <img src="heleno.jpg" alt="Foto de perfil do Prof. Dr. Heleno Bispo">
+          <div class="team-info"><h4 data-lang-key="nameHeleno">Prof. Dr. Heleno Bispo</h4><p data-lang-key="roleProfessor">Full Professor</p><span>heleno.bispo@ufcg.edu.br</span></div>
+        </button>
+        <button type="button" class="team-member-card" data-role="PhD Candidate" data-img="https://via.placeholder.com/300x220.png" data-bio-key="bioPhD1" data-lattes="http://lattes.cnpq.br/SEU-LATTES-AQUI">
+          <img src="https://via.placeholder.com/300x220.png" alt="Foto de um pesquisador">
+          <div class="team-info"><h4 data-lang-key="namePhD1">Nome do Aluno(a)</h4><p data-lang-key="rolePhD">PhD Candidate</p><span>aluno.phd@ufcg.edu.br</span></div>
+        </button>
+        <button type="button" class="team-member-card" data-role="Alumni" data-img="https://via.placeholder.com/300x220.png" data-bio-key="bioAlumni1" data-lattes="http://lattes.cnpq.br/SEU-LATTES-AQUI">
+          <img src="https://via.placeholder.com/300x220.png" alt="Foto de um pesquisador">
+          <div class="team-info"><h4 data-lang-key="nameAlumni1">Nome do Ex-Aluno(a)</h4><p data-lang-key="roleAlumni">Alumni (2024)</p><span>Engenheiro(a) na Empresa X</span></div>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <section id="publications" class="section">
+    <div class="container">
+      <h2 class="animate-on-scroll" data-lang-key="publicationsTitle">Publicações</h2>
+      <div class="tabs animate-on-scroll" id="pub-filters">
+        <button class="tab-btn active" data-filter="all" data-lang-key="filterAll">Todas</button>
+        <button class="tab-btn" data-filter="2025">2025</button>
+        <button class="tab-btn" data-filter="2024">2024</button>
+        <button class="tab-btn" data-filter="journal" data-lang-key="filterJournal">Periódicos</button>
+        <button class="tab-btn" data-filter="conference" data-lang-key="filterConference">Conferências</button>
+      </div>
+      <ul id="pub-list" class="animate-on-scroll">
+        <li data-year="2025" data-type="journal">
+          <button class="bib-btn" data-lang-key="copyCitationBtn">Copiar Citação</button>
+          AUTOR, A.; BISPO, H. Título de um artigo sobre otimização. <em>Journal of Important Research</em>, v. 42, p. 1-15, 2025. <a href="#" target="_blank">DOI</a>
+          <pre class="bibtex-data">@article{autor2025, title={Título...}, author={Autor, A and Bispo, H}, journal={Journal...}, year={2025}}</pre>
+        </li>
+        <li data-year="2024" data-type="conference">
+          <button class="bib-btn" data-lang-key="copyCitationBtn">Copiar Citação</button>
+          ALUNO, B. B.; BISPO, H. Um novo método para controle. In: Anais do Congresso Brasileiro de Engenharia Química, 2024. <a href="#" target="_blank">PDF</a>
+          <pre class="bibtex-data">@inproceedings{aluno2024, title={Um novo...}, author={Aluno, B and Bispo, H}, booktitle={Anais...}, year={2024}}</pre>
+        </li>
+      </ul>
+    </div>
+  </section>
+  
+  <section id="partners" class="section">
+    <div class="container">
+        <h2 class="animate-on-scroll" data-lang-key="partnersTitle">Parceiros Industriais</h2>
+        <div class="partners-grid animate-on-scroll">
+            <img src="logos/alcoa.png" alt="Logo Alcoa">
+            <img src="logos/aveva.png" alt="Logo Aveva">
+            <img src="logos/honeywell.png" alt="Logo Honeywell">
+            <img src="logos/braskem.png" alt="Logo Braskem">
+            <img src="logos/petrobras.png" alt="Logo Petrobras">
+        </div>
+    </div>
+  </section>
+
+  <section id="contact" class="section">
+    <div class="container">
+      <h2 class="animate-on-scroll" data-lang-key="contactTitle">Contato</h2>
+      <div class="contact-grid animate-on-scroll">
+        <div>
+          <p>
+            <strong data-lang-key="contactEmailLabel">Email:</strong> 
+            <a href="mailto:iridium@eq.ufcg.edu.br">iridium@eq.ufcg.edu.br</a>
+          </p>
+          <p>
+            <strong data-lang-key="contactAddressLabel">Endereço:</strong><br>
+            <span data-lang-key="contactAddressText">
+              Universidade Federal de Campina Grande (UFCG)<br>
+              Centro de Ciências e Tecnologia, Bloco CX<br>
+              Rua Aprígio Veloso, 882, Bairro Universitário<br>
+              CEP 58429-900, Campina Grande - PB, Brasil.
+            </span>
+          </p>
+        </div>
+        <div class="map-container">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3958.058327909988!2d-35.90993888522511!3d-7.234229994779601!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7ac1e3d366289ab%3A0x1c3b2d1ba6bcf891!2sUniversidade%20Federal%20de%20Campina%20Grande!5e0!3m2!1spt-BR!2sbr!4v1663000000000!5m2!1spt-BR!2sbr" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade" 
+            data-lang-key="contactMapTitle"
+            title="Localização da UFCG no Google Maps">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer style="background: #2c3e50; color: #fff; text-align:center; padding: 2rem 0;">
+  <p style="margin:0" data-lang-key="footerText">© 2025 IRIDIUM Research Group. Todos os direitos reservados.</p>
+</footer>
+
+<div id="personModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <button class="modal-close" aria-label="Fechar modal">×</button>
+    <div class="modal-body">
+      <img id="modalImg" class="modal-img" src="" alt="">
+      <div>
+        <h3 id="modalName"></h3>
+        <p id="modalRole"></p>
+        <p id="modalBio"></p>
+        <div id="modalLinks"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const translations = {
+        navHome: { pt: 'Home', en: 'Home' },
+        navResearch: { pt: 'Pesquisa', en: 'Research' },
+        navTeam: { pt: 'Equipe', en: 'The Team' },
+        navPublications: { pt: 'Publicações', en: 'Publications' },
+        navPartners: { pt: 'Parceiros', en: 'Partners' },
+        navContact: { pt: 'Contato', en: 'Contact' },
+        filterAll: { pt: 'Todos', en: 'All' },
+        filterProfessor: { pt: 'Professor', en: 'Professor' },
+        filterPhD: { pt: 'Doutorando(a)', en: 'PhD Candidate' },
+        filterMaster: { pt: 'Mestrando(a)', en: 'Master\'s Student' },
+        filterAlumni: { pt: 'Alumni', en: 'Alumni' },
+        filterJournal: { pt: 'Periódicos', en: 'Journals' },
+        filterConference: { pt: 'Conferências', en: 'Conferences' },
+        homeTitle: { pt: 'IRIDIUM Research Group', en: 'IRIDIUM Research Group' },
+        homeSubtitle: { pt: 'Pesquisa Aplicada a Processos Industriais no Centro de Ciências e Tecnologia da UFCG. Nossa missão é apoiar a transformação digital (Indústria 4.0) em indústrias químicas e petroquímicas.', en: 'Applied Research in Industrial Processes at the Center for Science and Technology of UFCG. Our mission is to support the digital transformation (Industry 4.0) in chemical and petrochemical industries.' },
+        researchTitle: { pt: 'Linhas de Pesquisa', en: 'Research Areas' },
+        researchArea1Title: { pt: 'Modelagem e Simulação', en: 'Modelling and Simulation' },
+        researchArea1Desc: { pt: 'Desenvolvimento de modelos matemáticos para prever e analisar o comportamento de processos químicos.', en: 'Development of mathematical models to predict and analyze the behavior of chemical processes.' },
+        researchArea2Title: { pt: 'Controle de Processos', en: 'Process Control' },
+        researchArea2Desc: { pt: 'Implementação de estratégias de controle avançado e sintonia de malhas para otimizar a operação industrial.', en: 'Implementation of advanced control strategies and loop tuning to optimize industrial operations.'},
+        researchArea3Title: { pt: 'Otimização de Processos', en: 'Process Optimization' },
+        researchArea3Desc: { pt: 'Aplicação de algoritmos para maximizar a eficiência, o lucro e a sustentabilidade de plantas industriais.', en: 'Application of algorithms to maximize efficiency, profit, and sustainability of industrial plants.' },
+        researchArea4Title: { pt: 'Análise Econômica', en: 'Economic Analysis' },
+        researchArea4Desc: { pt: 'Estudos de viabilidade técnica e econômica para projetos e otimizações na indústria de processos.', en: 'Technical and economic feasibility studies for projects and optimizations in the process industry.' },
+        teamTitle: { pt: 'Nossa Equipe', en: 'Our Team' },
+        nameHeleno: { pt: 'Prof. Dr. Heleno Bispo', en: 'Prof. Dr. Heleno Bispo' },
+        roleProfessor: { pt: 'Professor Titular', en: 'Full Professor' },
+        bioHeleno: { pt: 'Especialista em controle de processos, simulação e otimização de indústrias químicas e petroquímicas. Coordenador do grupo IRIDIUM.', en: 'Expert in process control, simulation, and optimization of chemical and petrochemical industries. Coordinator of the IRIDIUM group.'},
+        namePhD1: { pt: 'Nome do Aluno(a)', en: 'Student Name'},
+        rolePhD: { pt: 'Doutorando(a)', en: 'PhD Candidate' },
+        bioPhD1: { pt: 'Doutoranda pesquisando a aplicação de redes neurais para detecção de falhas em reatores. Bolsista CNPq.', en: 'PhD candidate researching the application of neural networks for fault detection in reactors. CNPq fellow.' },
+        nameAlumni1: { pt: 'Nome do Ex-Aluno(a)', en: 'Alumni Name' },
+        roleAlumni: { pt: 'Alumni (2024)', en: 'Alumni (2024)'},
+        bioAlumni1: { pt: 'Após concluir o mestrado, hoje atua como Engenheiro(a) de Processos na Empresa X.', en: 'After completing the master\'s degree, now works as a Process Engineer at Company X.' },
+        publicationsTitle: { pt: 'Publicações', en: 'Publications' },
+        copyCitationBtn: { pt: 'Copiar Citação', en: 'Copy Citation' },
+        partnersTitle: { pt: 'Parceiros Industriais', en: 'Industrial Partners' },
+        contactTitle: { pt: 'Contato', en: 'Contact' },
+        contactEmailLabel: { pt: 'Email:', en: 'Email:' },
+        contactAddressLabel: { pt: 'Endereço:', en: 'Address:'},
+        contactAddressText: { pt: 'Universidade Federal de Campina Grande (UFCG)<br>Centro de Ciências e Tecnologia, Bloco CX<br>Rua Aprígio Veloso, 882, Bairro Universitário<br>CEP 58429-900, Campina Grande - PB, Brasil.', en: 'Federal University of Campina Grande (UFCG)<br>Center for Science and Technology, Building CX<br>Aprígio Veloso Street, 882, Universitário<br>ZIP 58429-900, Campina Grande - PB, Brazil.'},
+        contactMapTitle: { pt: 'Localização da UFCG no Google Maps', en: 'UFCG Location on Google Maps'},
+        footerText: { pt: '© 2025 IRIDIUM Research Group. Todos os direitos reservados.', en: '© 2025 IRIDIUM Research Group. All Rights Reserved.'}
+    };
+
+    let currentLang = localStorage.getItem('language') || 'pt';
+    const langButtons = { pt: document.getElementById('lang-pt'), en: document.getElementById('lang-en') };
+    const switchLanguage = (lang) => {
+        currentLang = lang;
+        localStorage.setItem('language', lang);
+        document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
+        langButtons.pt.classList.toggle('active', lang === 'pt');
+        langButtons.en.classList.toggle('active', lang === 'en');
+        document.querySelectorAll('[data-lang-key]').forEach(el => {
+            const key = el.dataset.langKey;
+            if (translations[key] && translations[key][lang]) {
+                if (el.tagName === 'IFRAME') {
+                    el.title = translations[key][lang];
+                } else {
+                    el.innerHTML = translations[key][lang];
+                }
+            }
+        });
+    };
+    langButtons.pt.addEventListener('click', () => switchLanguage('pt'));
+    langButtons.en.addEventListener('click', () => switchLanguage('en'));
+    switchLanguage(currentLang);
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+
+    const setupTabFiltering = (tabsContainerId, contentSelector) => {
+        const tabsContainer = document.getElementById(tabsContainerId);
+        if (!tabsContainer) return;
+        tabsContainer.addEventListener('click', (e) => {
+            if (!e.target.matches('.tab-btn')) return;
+            tabsContainer.querySelector('.active').classList.remove('active');
+            e.target.classList.add('active');
+            const filter = e.target.dataset.filter;
+            document.querySelectorAll(contentSelector).forEach(item => {
+                let show = filter === 'all' || filter === 'All' || 
+                           (item.dataset.year && item.dataset.year === filter) || 
+                           (item.dataset.type && item.dataset.type === filter) ||
+                           (item.dataset.role && item.dataset.role === filter);
+                item.style.display = show ? '' : 'none';
+            });
+        });
+    };
+    setupTabFiltering('team-tabs', '.team-member-card');
+    setupTabFiltering('pub-filters', '#pub-list li');
+
+    document.querySelectorAll('.bib-btn').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const bibtexData = e.target.parentElement.querySelector('.bibtex-data').textContent;
+            navigator.clipboard.writeText(bibtexData).then(() => {
+                const originalTextKey = e.target.dataset.langKey;
+                e.target.innerText = currentLang === 'pt' ? 'Copiado!' : 'Copied!';
+                setTimeout(() => { e.target.innerText = translations[originalTextKey][currentLang]; }, 2000);
+            });
+        });
+    });
+
+    const modal = document.getElementById('personModal');
+    const modalCloseBtn = modal.querySelector('.modal-close');
+    let lastFocused;
+
+    document.querySelectorAll('.team-member-card').forEach(card => {
+        card.addEventListener('click', () => openPersonModal(card));
+    });
+
+    function openPersonModal(card) {
+        lastFocused = document.activeElement;
+        const name = card.querySelector('h4').textContent;
+        const role = card.querySelector('p').textContent;
+        const imgSrc = card.querySelector('img').src;
+        const bioKey = card.dataset.bioKey;
+        const bio = translations[bioKey] ? translations[bioKey][currentLang] : '';
+        
+        modal.querySelector('#modalImg').src = imgSrc;
+        modal.querySelector('#modalImg').alt = `Foto de ${name}`;
+        modal.querySelector('#modalName').textContent = name;
+        modal.querySelector('#modalRole').textContent = role;
+        modal.querySelector('#modalBio').textContent = bio;
+        
+        const linksContainer = modal.querySelector('#modalLinks');
+        linksContainer.innerHTML = '';
+        if (card.dataset.lattes) linksContainer.innerHTML += `<a href="${card.dataset.lattes}" target="_blank">Lattes</a>`;
+        if (card.dataset.scholar) linksContainer.innerHTML += `<a href="${card.dataset.scholar}" target="_blank">Scholar</a>`;
+
+        modal.classList.add('open');
+        modalCloseBtn.focus();
+    }
+
+    function closeModal() {
+        modal.classList.remove('open');
+        if(lastFocused) lastFocused.focus();
+    }
+    
+    modalCloseBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+});
+</script>
+
+</body>
+</html>
